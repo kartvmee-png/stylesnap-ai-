@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,47 +107,3 @@ function generate(){
   if(style === "instagram"){
     text = "✨ New Fashion Pick ✨\n" +
       title + "\n" + details +
-      "\n\nSave this look for your next outfit inspiration!" +
-      "\n\n#Fashion #StyleInspiration #EthnicWear #OutfitIdeas";
-  } else if(style === "meesho"){
-    text = "Product Name: " + title +
-      "\n\nProduct Description: Explore this " + item +
-      (color ? " in " + color : "") +
-      ". A versatile option for your wardrobe." +
-      (fabric ? "\nMaterial: " + fabric : "") +
-      (details ? "\nAdditional details: " + details : "") +
-      "\n\nPlease verify all product specifications before publishing.";
-  } else {
-    text = "PRODUCT TITLE\n" + title +
-      "\n\nPRODUCT DESCRIPTION\nDiscover this " + item +
-      (color ? " in " + color : "") +
-      ". Add a fresh touch to your wardrobe with this style." +
-      (fabric ? "\nMaterial: " + fabric : "") +
-      (details ? "\nDetails: " + details : "") +
-      "\n\nKEYWORDS\n" + item + ", fashion, clothing, style";
-  }
-
-  document.getElementById("result").textContent = text;
-  document.getElementById("output").hidden = false;
-}
-
-function copyText(){
-  const text = document.getElementById("result").textContent;
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(text)
-      .then(()=>alert("Catalog text copied!"))
-      .catch(()=>fallbackCopy(text));
-  } else fallbackCopy(text);
-}
-function fallbackCopy(text){
-  const box = document.createElement("textarea");
-  box.value = text;
-  document.body.appendChild(box);
-  box.select();
-  document.execCommand("copy");
-  box.remove();
-  alert("Catalog text copied!");
-}
-</script>
-</body>
-</html>
