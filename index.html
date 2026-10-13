@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StyleSnap AI | Fashion Catalog</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff8f5;color:#292323;
+font-family:Arial,sans-serif}
+header{background:#302329;color:white;padding:24px 18px}
+header h1{margin:0;font-size:27px}
+header p{margin-bottom:0;color:#f3dfe7}
+main{max-width:680px;margin:auto;padding:18px}
+.card{background:white;padding:18px;margin-bottom:16px;
+border-radius:16px;border:1px solid #f0e2e2}
+label{display:block;font-weight:bold;margin:14px 0 7px}
+input,select,textarea{width:100%;padding:12px;
+border:1px solid #d9caca;border-radius:9px;font-size:16px}
+button{border:0;border-radius:10px;padding:13px;
+font-size:16px;font-weight:bold;cursor:pointer}
+.primary{background:#a23d67;color:white;width:100%;
+margin-top:16px}
+.secondary{background:#f3e8ed;color:#51263a}
+#preview{width:100%;max-height:300px;object-fit:contain;
+margin-top:12px;display:none;border-radius:10px}
+#result{white-space:pre-wrap;line-height:1.6}
+small{color:#75666d}
+</style>
+</head>
+<body>
+<header>
+  <h1>StyleSnap AI 👗</h1>
+  <p>Your fashion catalog assistant</p>
+</header>
+<main>
+  <div class="card">
+    <h2>Create a product catalog</h2>
+    <p>Turn clothing details into a ready-to-use product listing.</p>
+    <label for="photo">Upload clothing photo</label>
+    <input id="photo" type="file" accept="image/*">
+    <img id="preview" alt="Clothing photo preview">
+
+    <label for="item">Clothing type</label>
+    <select id="item">
+      <option>Kurti</option>
+      <option>Saree</option>
+      <option>Dress</option>
+      <option>Shirt</option>
+      <option>Suit set</option>
+      <option>Other clothing</option>
+    </select>
+
+    <label for="color">Color</label>
+    <input id="color" placeholder="e.g. pink">
+
+    <label for="fabric">Fabric or material</label>
+    <input id="fabric" placeholder="e.g. cotton (if known)">
+
+    <label for="details">Extra details</label>
+    <textarea id="details" rows="3"
+      placeholder="Print, sleeves, occasion, sizes..."></textarea>
+
+    <label for="style">Catalog style</label>
+    <select id="style">
+      <option value="professional">Professional product listing</option>
+      <option value="instagram">Instagram caption</option>
+      <option value="meesho">Marketplace description</option>
+    </select>
+
+    <button class="primary" onclick="generate()">
+      Generate Catalog ✨
+    </button>
+    <small>Demo version: uses templates, not a live AI API.</small>
+  </div>
+
+  <div class="card" id="output" hidden>
+    <h2>Your catalog text</h2>
+    <div id="result"></div>
+    <button class="secondary" onclick="copyText()">
+      Copy catalog text
+    </button>
+  </div>
+</main>
+
+<script>
+const photo = document.getElementById("photo");
+photo.addEventListener("change", function(){
+  const file = this.files[0];
+  if(!file) return;
+  const preview = document.getElementById("preview");
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+});
+
+function generate(){
+  const item = document.getElementById("item").value;
+  const color = document.getElementById("color").value.trim();
+  const fabric = document.getElementById("fabric").value.trim();
+  const details = document.getElementById("details").value.trim();
+  const style = document.getElementById("style").value;
+
+  const title = [color, fabric, item].filter(Boolean)
+    .map(x => x.charAt(0).toUpperCase()+x.slice(1)).join(" ");
+
+  let text = "";
+  if(style === "instagram"){
+    text = "✨ New Fashion Pick ✨\n" +
+      title + "\n" + details +
+      "\n\nSave this look for your next outfit inspiration!" +
+      "\n\n#Fashion #StyleInspiration #EthnicWear #OutfitIdeas";
+  } else if(style === "meesho"){
+    text = "Product Name: " + title +
+      "\n\nProduct Description: Explore this " + item +
+      (color ? " in " + color : "") +
+      ". A versatile option for your wardrobe." +
+      (fabric ? "\nMaterial: " + fabric : "") +
+      (details ? "\nAdditional details: " + details : "") +
+      "\n\nPlease verify all product specifications before publishing.";
+  } else {
+    text = "PRODUCT TITLE\n" + title +
+      "\n\nPRODUCT DESCRIPTION\nDiscover this " + item +
+      (color ? " in " + color : "") +
+      ". Add a fresh touch to your wardrobe with this style." +
+      (fabric ? "\nMaterial: " + fabric : "") +
+      (details ? "\nDetails: " + details : "") +
+      "\n\nKEYWORDS\n" + item + ", fashion, clothing, style";
+  }
+
+  document.getElementById("result").textContent = text;
+  document.getElementById("output").hidden = false;
+}
+
+function copyText(){
+  const text = document.getElementById("result").textContent;
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text)
+      .then(()=>alert("Catalog text copied!"))
+      .catch(()=>fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+function fallbackCopy(text){
+  const box = document.createElement("textarea");
+  box.value = text;
+  document.body.appendChild(box);
+  box.select();
+  document.execCommand("copy");
+  box.remove();
+  alert("Catalog text copied!");
+}
+</script>
+</body>
+</html>
